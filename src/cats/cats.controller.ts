@@ -10,6 +10,7 @@ import {
   Put,
   Delete,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -41,25 +42,24 @@ export class CatsController {
     return {};
   }
 
-  @Get('id')
+  @Get()
   async findOne(@Param('id') id: number): Promise<object> {
-    console.log({ id });
     const cat = this.catservice.findById(id);
     return { cat };
   }
 
-  @Put('id')
+  @Put()
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCatDto: UpdateCatDto,
   ): Promise<object> {
-    console.log({ id, updateCatDto });
-    return {};
+    const cat: Cat = this.catservice.update(id, updateCatDto);
+    return { cat };
   }
 
-  @Delete('id')
-  async remove(@Param('id') id: string): Promise<object> {
-    console.log({ id });
-    return {};
+  @Delete()
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<object> {
+    const cat: Cat = this.catservice.remove(id);
+    return { cat };
   }
 }
