@@ -7,7 +7,7 @@ export class CatService {
   private readonly cats: Cat[] = [];
 
   create(cat: CreateCatDto) {
-    const id: number = Math.random() * 1000;
+    const id: number = +(Math.random() * (10000 - 900) + 900).toFixed();
     this.cats.push({ id, ...cat });
   }
 
