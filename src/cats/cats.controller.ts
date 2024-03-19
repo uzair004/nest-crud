@@ -11,7 +11,6 @@ import {
   Delete,
   HttpStatus,
   ParseIntPipe,
-  ParseFloatPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
