@@ -11,6 +11,7 @@ import {
   Delete,
   HttpStatus,
   ParseIntPipe,
+  ParseFloatPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -42,13 +43,13 @@ export class CatsController {
     return {};
   }
 
-  @Get()
-  async findOne(@Param('id') id: number): Promise<object> {
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<object> {
     const cat = this.catservice.findById(id);
     return { cat };
   }
 
-  @Put()
+  @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCatDto: UpdateCatDto,
@@ -57,7 +58,7 @@ export class CatsController {
     return { cat };
   }
 
-  @Delete()
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<object> {
     const cat: Cat = this.catservice.remove(id);
     return { cat };
