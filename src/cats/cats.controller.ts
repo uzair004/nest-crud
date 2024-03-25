@@ -11,6 +11,7 @@ import {
   Delete,
   HttpStatus,
   ParseIntPipe,
+  HttpException,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -40,6 +41,30 @@ export class CatsController {
   async create(@Body() catData: CreateCatDto): Promise<object> {
     this.catservice.create(catData);
     return {};
+  }
+
+  @Get('/exception/simple')
+  async exception(): Promise<HttpException> {
+    throw new HttpException('This action is forbidden', HttpStatus.FORBIDDEN);
+  }
+
+  @Get('/exception/custom-body')
+  async exceptionCustomBody(): Promise<object> {
+    try {
+      throw new Error();
+      return {};
+    } catch (err: any) {
+      throw new HttpException(
+        {
+          userFriendlyMsg: 'You are not allowed to perform this action',
+          hintCode: 'VOILATION',
+          message: 'Action Not Allowed!',
+        },
+        HttpStatus.FORBIDDEN,
+        { cause: err },
+      );
+    }
+
   }
 
   @Get(':id')
