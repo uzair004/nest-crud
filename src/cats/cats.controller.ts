@@ -12,6 +12,8 @@ import {
   HttpStatus,
   ParseIntPipe,
   HttpException,
+  UseFilters,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -19,6 +21,7 @@ import { CreateCatDto, UpdateCatDto } from './cats-dto';
 
 import { CatService } from './cats.service';
 import { Cat } from './cats.interface';
+import { HttpExceptionFilter } from 'src/http-exception-filter.ts/http-exception-filter.ts.filter';
 
 @Controller('cats')
 export class CatsController {
@@ -64,7 +67,13 @@ export class CatsController {
         { cause: err },
       );
     }
+  }
 
+  @Get('/exception/custom-filter')
+  @UseFilters(HttpExceptionFilter)
+  async customFilterTest(): Promise<object> {
+    throw new ForbiddenException();
+    return {};
   }
 
   @Get(':id')
