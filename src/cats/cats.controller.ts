@@ -14,6 +14,8 @@ import {
   HttpException,
   UseFilters,
   ForbiddenException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -22,6 +24,7 @@ import { CreateCatDto, UpdateCatDto } from './cats-dto';
 import { CatService } from './cats.service';
 import { Cat } from './cats.interface';
 import { HttpExceptionFilter } from 'src/http-exception-filter.ts/http-exception-filter.ts.filter';
+import { ToNumberPipe } from 'src/pipes/toNumber.pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -41,6 +44,7 @@ export class CatsController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe())
   async create(@Body() catData: CreateCatDto): Promise<object> {
     this.catservice.create(catData);
     return {};
@@ -77,7 +81,7 @@ export class CatsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<object> {
+  async findOne(@Param('id', ToNumberPipe) id: number): Promise<object> {
     const cat = this.catservice.findById(id);
     return { cat };
   }

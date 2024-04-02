@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './cats.interface';
 import { CreateCatDto, UpdateCatDto } from './cats-dto';
 
@@ -22,7 +22,16 @@ export class CatService {
   update(id: number, newCat: UpdateCatDto): Cat {
     const catIndex = this.cats.findIndex((cat) => cat.id === id);
     if (catIndex === -1) {
-      throw new Error('Cat not found');
+      // throw new Error('Cat not found');
+      throw new NotFoundException(
+        {
+          userFriendlyMsg: 'Oops! failed to update cat',
+          hintCode: 'NOT_FOUND',
+          message: 'Cat Not Found',
+        },
+        {
+          cause: `No Associated cat with id ${id}`,
+      });
     }
 
     const updatedCat = { ...this.cats[catIndex], ...newCat };
